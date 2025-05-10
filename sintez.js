@@ -1,4 +1,4 @@
-export { encodeWAV, generatePCM, tokenize, typeify };
+export { encodeWAV, evaluate, generatePCM, tokenize, typeify };
 
 // sample[n]= A ⋅ sin(2 * π * f * (n / R)​)
 
@@ -69,10 +69,17 @@ const atom = (name) => Symbol.for(name);
 function tokenize(input) {
   if (!input.trim()) return [];
 
-  const words = input.trim().split(/\s+/);
+  const loop = (
+    progressiveScope,
+    [graphemeAtHand, ...restOfGraphemes],
+    tokenSoFar = "",
+  ) => {
+    throw new Error("Not implemented");
+  };
 
-  return words.map((word) => {
-    const num = Number(word);
-    return isNaN(num) ? atom(word) : num;
-  });
+  return loop([[]], graphemes);
 }
+
+const evaluate = (expression) => {
+  throw new Error("Not implemented");
+};
