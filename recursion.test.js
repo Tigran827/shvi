@@ -39,24 +39,23 @@ Deno.test("Recursion", async (t) => {
           if (str.length === 0) {
             return acc;
           }
-          const [first, ...rest] = str;
 
-          fail(
-            function toggleCase(str) {
-              if (str.length === 0) return "";
+          function toggleCase(str) {
+            if (str.length === 0) return "";
 
-              const firstChar = str[0];
-              let toggledChar;
+            const firstChar = str[0];
+            let toggledChar;
 
-              if (firstChar === firstChar.toUpperCase()) {
-                toggledChar = firstChar.toLowerCase();
-              } else {
-                toggledChar = firstChar.toUpperCase();
-              }
+            if (firstChar === firstChar.toUpperCase()) {
+              toggledChar = firstChar.toLowerCase();
+            } else {
+              toggledChar = firstChar.toUpperCase();
+            }
 
-              return toggledChar + toggleCase(str.slice(1));
-            },
-          );
+            return toggledChar + toggleCase(str.slice(1));
+          }
+
+          return toggleCase(str);
         };
 
         return loop(str, "");
@@ -79,21 +78,18 @@ Deno.test("Recursion", async (t) => {
       // When all the elements are checked, return the maximum value
 
       const max = (numbers) => {
-        function findMax(arr) {
-          if (arr.length === 0) return -Infinity;
+        if (numbers.length === 0) return -Infinity;
 
-          function helper(currentMax, index) {
-            if (index === arr.length) return currentMax;
+        function helper(currentMax, index) {
+          if (index === numbers.length) return currentMax;
 
-            if (arr[index] > currentMax) {
-              currentMax = arr[index];
-            }
-
-            return helper(currentMax, index + 1);
+          if (numbers[index] > currentMax) {
+            currentMax = numbers[index];
           }
 
-          return helper(arr[0], 1);
+          return helper(currentMax, index + 1);
         }
+        return helper(numbers[0], 1);
       };
 
       const maxOfEmptyList = max([]);
@@ -118,14 +114,19 @@ Deno.test("Recursion", async (t) => {
       //  If it is, skip both characters
       //  If it is not, add the first character to the result and move to the next character of the string
 
+      // if (str.length >= substr.length && str.slice(0, substr.length) === substr) {
+      //   return strip(str.slice(substr.length), substr);
+      // } else {
+      //   return str[0] + strip(str.slice(1), substr);
+      // }
+
       const strip = (str, substr) => {
-        function removeSubstring(str, sub) {
-          if (str.length === 0 || sub.length === 0) return str;
-          if (str[0] === sub[0] && str[1] === sub[1]) {
-            return removeSubstring(str.slice(2), sub);
-          } else {
-            return str[0] + removeSubstring(str.slice(1), sub);
-          }
+        if (str.length === 0 || substr.length === 0) return str;
+
+        if (str.startsWith(substr)) {
+          return strip(str.slice(substr.length), substr);
+        } else {
+          return str[0] + strip(str.slice(1), substr);
         }
       };
 
@@ -133,7 +134,7 @@ Deno.test("Recursion", async (t) => {
       const emptyStringResult = strip("", "re");
       const emptySubstringResult = strip("Skies are grey in Greece", "");
       assertEquals(generalResult, "Skies a gy in Gece");
-      assertEquals(emptySubstringResult, "Skies a gy in Gece");
+      assertEquals(emptySubstringResult, "Skies are grey in Greece");
       assertEquals(emptyStringResult, "");
     },
   });
@@ -147,17 +148,15 @@ Deno.test("Recursion", async (t) => {
       // Move to the next element and repeat the process
 
       const flatten = (arr) => {
-        function flattenArray(arr) {
-          if (arr.length === 0) return [];
+        if (arr.length === 0) return [];
 
-          const first = arr[0];
-          const rest = flattenArray(arr.slice(1));
+        const first = arr[0];
+        const rest = flatten(arr.slice(1));
 
-          if (Array.isArray(first)) {
-            return flattenArray(first).concat(rest);
-          } else {
-            return [first].concat(rest);
-          }
+        if (Array.isArray(first)) {
+          return flatten(first).concat(rest);
+        } else {
+          return [first].concat(rest);
         }
       };
 
